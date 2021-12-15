@@ -193,9 +193,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Name
+  m_Text: 'Farhan Irani
 
-    Student Number'
+    100748418'
 --- !u!222 &592369443
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -639,7 +639,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 2139649763}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
