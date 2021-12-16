@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Cinemachine;
 
 public class Move : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Move : MonoBehaviour
     public PhotonView photoView;
 
     private Vector3 velocity;
+    private CinemachineFreeLook cinemachine;
 
     public float speed = 5f;
     public float turnSmoothTime = 0.2f;
@@ -29,7 +31,6 @@ public class Move : MonoBehaviour
         if (photoView.IsMine)
         {
             Movement();
-            CameraControls();
         }
     }
 
@@ -43,7 +44,7 @@ public class Move : MonoBehaviour
         float vertical = leftJoystick.Vertical;
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cinemachine.transform.eulerAngles.y;
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
         Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
@@ -56,22 +57,13 @@ public class Move : MonoBehaviour
 
         }
 
-        cam.position = new Vector3(transform.position.x, 
-            transform.position.y + 2, 
-            transform.position.z - 10);
+        cinemachine.m_XAxis.Value += rightJoyStick.Horizontal * 100 * Time.deltaTime;
+        cinemachine.m_YAxis.Value += rightJoyStick.Vertical * Time.deltaTime;
 
         //Calculate Gravity
         velocity.y += gravity * Time.deltaTime;
         //Apply gravity
         controller.Move(velocity * Time.deltaTime);
-    }
-
-    public void CameraControls()
-    {
-        camAngle += rightJoyStick.Horizontal * camAngleSpeed;
-
-        cam.position = transform.position + Quaternion.AngleAxis(camAngle, Vector3.up) * new Vector3(0, 3.54f, -9.4f);
-        cam.rotation = Quaternion.LookRotation(transform.position + Vector3.up * 2f - cam.position, Vector3.up);
     }
 
     public void SetJoysticks(GameObject camera)
@@ -84,6 +76,10 @@ public class Move : MonoBehaviour
             else if (temp.tag == "RightJoystick")
                 rightJoyStick = temp;
         }
+
+        cinemachine = camera.GetComponentInChildren<CinemachineFreeLook>();
+        cinemachine.LookAt = transform.GetChild(0);
+        cinemachine.Follow = transform;
 
         cam = camera.transform;
     }

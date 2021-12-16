@@ -22,10 +22,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     public Transform playerListContent; //*
 
     public Button startButton; //*
-    public Button settingsButton;
-
-    public GameObject readyButton;
-    private GameObject readyButtonClone;
     public Transform buttonOrganizer;
 
     public void Start()
@@ -61,21 +57,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         for (int i = 0; i < players.Length; i++) //*
         {
             Instantiate(playerListing, playerListContent).GetComponent<PlayerListing>().SetPlayerInfo(players[i]);
-
-            if (i == 0)
-            {
-                startButton.interactable = true;
-                settingsButton.interactable = true;
-            }
-            else
-            {
-                startButton.interactable = false;
-                settingsButton.interactable = false;
-            }
         }
-
-        readyButtonClone = Instantiate(readyButton, buttonOrganizer);
-        readyButtonClone.GetComponent<ReadyButton>().SetCurrentPlayer(playerListContent.gameObject);
 
     }
 
@@ -98,16 +80,12 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer) //*
     {
-        Instantiate(playerListing, playerListContent).GetComponent<PlayerListing>().SetPlayerInfo(newPlayer);
+     Instantiate(playerListing, playerListContent).GetComponent<PlayerListing>().SetPlayerInfo(newPlayer);
     }
 
     public void OnClickStartGame() //*
     {
-        if (readyButtonClone.GetComponent<ReadyButton>().readyFlag)
-        {
             PhotonNetwork.LoadLevel("Arena");
-        }
-
     }
 
 }
